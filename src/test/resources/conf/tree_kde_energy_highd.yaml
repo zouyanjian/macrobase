@@ -1,0 +1,29 @@
+inputFile: us_energy_1p0.csv.gz
+columns:
+  - electricity_facility_kw
+  - cooling_electricity_kw
+  - fans_electricity_kw
+  - interiorlights_electricity_kw
+  - interiorequipment_electricity_kw
+  - gas_facility_kw
+#  - water_heater_watersystems_gas_kw
+#  - heating_gas_kw
+attributes: []
+percentile: .99
+
+kernel: gaussian
+sampleSize: 1
+bwMultiplier: 1.0
+tolMultiplier: 0.1
+cutoffMultiplier: 1.1
+
+useGrid: true
+gridSizes:
+  - 0.8
+  - 0.5
+leafSize: 20
+splitByWidth: true
+
+waitForUser: false
+showTreeTraversal: false
+dumpScores: false

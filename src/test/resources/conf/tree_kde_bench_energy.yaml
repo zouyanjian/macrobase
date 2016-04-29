@@ -1,0 +1,24 @@
+inputFile: us_energy_1p0.csv.gz
+columns:
+  - fans_electricity_kw
+  - interiorequipment_electricity_kw
+attributes: []
+percentile: .99
+
+kernel: gaussian
+sampleSize: 30000
+tolMultiplier: 0.1
+cutoffMultiplier: 1.1
+bwMultiplier: 1.0
+useGrid: true
+gridSizes:
+  - 0.8
+  - 0.5
+leafSize: 20
+splitByWidth: true
+
+trainSize: 650000
+testSize: 650000
+waitForUser: false
+showTreeTraversal: false
+dumpScores: false
