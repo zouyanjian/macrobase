@@ -102,7 +102,6 @@ public class MacroBaseConfTest {
                                                                                    "");
         MacroBaseConf conf = cfFactory.build(new File("src/test/resources/conf/simple.yaml"));
 
-
         assertEquals((Double) 0.1, conf.getDouble("this.is.a.double"));
         assertEquals((Integer) 100, conf.getInt("this.is.an.integer"));
         assertEquals((Long) 10000000000000L, conf.getLong("this.is.a.long"));

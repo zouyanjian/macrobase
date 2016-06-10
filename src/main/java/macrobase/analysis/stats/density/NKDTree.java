@@ -3,6 +3,7 @@ package macrobase.analysis.stats.density;
 import com.google.common.base.Strings;
 import macrobase.util.AlgebraUtils;
 import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.math3.stat.descriptive.rank.Percentile;
 import org.apache.commons.math3.util.DoubleArray;
 
 import java.util.*;
@@ -60,42 +61,49 @@ public class NKDTree {
     public NKDTree build(List<double[]> data) {
         this.k = data.get(0).length;
         this.boundaries = AlgebraUtils.getBoundingBoxRaw(data);
-        return buildRec((ArrayList<double[]>)data, 0, data.size());
+        // Make a local copy of the data since we're going to sort it
+        double[][] dataArray = new double[data.size()][k];
+        for (int i=0;i<dataArray.length;i++) {
+            dataArray[i] = data.get(i);
+        }
+        return buildRec(dataArray, 0, dataArray.length);
     }
 
-    private NKDTree buildRec(ArrayList<double[]> data, int startIdx, int endIdx) {
+    private NKDTree buildRec(double[][] data, int startIdx, int endIdx) {
         this.nBelow = endIdx - startIdx;
 
         if (endIdx - startIdx > this.leafCapacity) {
+
             double min = Double.MAX_VALUE;
             double max = -Double.MAX_VALUE;
             for (int j=startIdx;j<endIdx;j++) {
-                double curVal = data.get(j)[splitDimension];
+                double curVal = data[j][splitDimension];
                 if (curVal < min) { min = curVal; }
                 if (curVal > max) { max = curVal; }
             }
             boundaries[splitDimension][0] = min;
             boundaries[splitDimension][1] = max;
+
             this.splitValue = 0.5 * (boundaries[splitDimension][0] + boundaries[splitDimension][1]);
             int l = startIdx;
             int r = endIdx - 1;
             while (true) {
-                while (data.get(l)[splitDimension] < splitValue && (l<r)) {
+                while (data[l][splitDimension] < splitValue && (l<r)) {
                     l++;
                 }
-                while (data.get(r)[splitDimension] >= splitValue && (l<r)) {
+                while (data[r][splitDimension] >= splitValue && (l<r)) {
                     r--;
                 }
                 if (l < r) {
-                    double[] tmp = data.get(l);
-                    data.set(l, data.get(r));
-                    data.set(r, tmp);
+                    double[] tmp = data[l];
+                    data[l]= data[r];
+                    data[r]= tmp;
                 } else {
                     break;
                 }
             }
             if (l==startIdx || l ==endIdx-1) {
-                this.splitValue = data.get(l)[splitDimension];
+                this.splitValue = data[l][splitDimension];
                 l = (startIdx + endIdx) / 2;
             }
             this.loChild = new NKDTree(this, true).buildRec(data, startIdx, l);
@@ -111,7 +119,7 @@ public class NKDTree {
 
             double[] sum = new double[k];
             for (int j=startIdx;j<endIdx;j++) {
-                double[] d = data.get(j);
+                double[] d = data[j];
                 leafItems.add(d);
                 for (int i = 0; i < k; i++) {
                     sum[i] += d[i];

@@ -14,6 +14,9 @@ public class ScoreEstimate {
         double[][] minMaxD = tree.getMinMaxDistanceVectors(d);
         this.wMax = kernel.density(minMaxD[0]);
         this.wMin = kernel.density(minMaxD[1]);
+//        double[] wBounds = kernel.getBounds(tree.getMinMaxDistanceVectors(d));
+//        this.wMin = wBounds[0];
+//        this.wMax = wBounds[1];
         int n = tree.getNBelow();
         this.totalWMax = wMax * n;
         this.totalWMin = wMin * n;

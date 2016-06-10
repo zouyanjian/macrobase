@@ -6,7 +6,9 @@ macrobase.loader.csv.file: src/test/resources/data/us_energy_0p1.csv.gz
 macrobase.loader.csv.compression: GZIP
 macrobase.loader.attributes: [area_id, building_name]
 macrobase.loader.targetLowMetrics: []
-macrobase.loader.targetHighMetrics: [fans_electricity_kw, interiorequipment_electricity_kw]
+macrobase.loader.targetHighMetrics:
+  - fans_electricity_kw
+  - interiorequipment_electricity_kw
 
 macrobase.analysis.minSupport: 0.01
 macrobase.analysis.minOIRatio: 3.0
@@ -14,9 +16,17 @@ macrobase.analysis.minOIRatio: 3.0
 macrobase.analysis.usePercentile: true
 macrobase.analysis.targetPercentile: 0.99
 
+kdeConf:
+  kernel: gaussian
+  tolMultiplier: .2
+  cutoffMultiplier: 2.0
+  bwMultiplier: 0.5
+  useGrid: true
+  gridSizes:
+    - 0.8
+    - 0.5
+  leafSize: 20
+  splitByWidth: true
+
 logging:
   level: DEBUG
-
-#  loggers:
-#    "macrobase": TRACE
-

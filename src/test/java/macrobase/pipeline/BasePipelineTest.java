@@ -77,10 +77,6 @@ public class BasePipelineTest {
         assertTrue(conf.constructTransform(conf.getTransformType()) instanceof BinnedKDE);
 
         conf.set(MacroBaseConf.TRANSFORM_TYPE,
-                 MacroBaseConf.TransformType.TREE_KDE);
-        assertTrue(conf.constructTransform(conf.getTransformType()) instanceof TreeKDE);
-
-        conf.set(MacroBaseConf.TRANSFORM_TYPE,
                  MacroBaseConf.TransformType.BAYESIAN_NORMAL);
         assertTrue(conf.constructTransform(conf.getTransformType()) instanceof BayesianNormalDensity);
 

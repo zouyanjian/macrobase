@@ -4,8 +4,8 @@ import com.google.common.base.Stopwatch;
 import macrobase.analysis.classify.BatchingPercentileClassifier;
 import macrobase.analysis.classify.OutlierClassifier;
 import macrobase.analysis.result.AnalysisResult;
-import macrobase.conf.TreeKDEConf;
 import macrobase.analysis.transform.TreeKDETransform;
+import macrobase.conf.TreeKDEConf;
 import macrobase.analysis.summary.BatchSummarizer;
 import macrobase.analysis.summary.Summarizer;
 import macrobase.analysis.summary.Summary;
@@ -26,6 +26,7 @@ public class TreeKDEPipeline extends BasePipeline{
     @Override
     public Pipeline initialize(MacroBaseConf conf) throws Exception {
         super.initialize(conf);
+        log.debug(conf.kdeConf.toString());
         conf.sanityCheckBatch();
         return this;
     }
@@ -37,10 +38,7 @@ public class TreeKDEPipeline extends BasePipeline{
         List<Datum> data = ingester.getStream().drain();
         final long loadMs = sw.elapsed(TimeUnit.MILLISECONDS);
 
-        FeatureTransform ft = new TreeKDETransform(
-                conf,
-                new TreeKDEConf().initialize()
-        );
+        FeatureTransform ft = new TreeKDETransform(conf);
         ft.consume(data);
 
         OutlierClassifier oc = new BatchingPercentileClassifier(conf);
@@ -49,7 +47,7 @@ public class TreeKDEPipeline extends BasePipeline{
         Summarizer bs = new BatchSummarizer(conf);
         bs.consume(oc.getStream().drain());
 
-        Summary result = bs.getStream().drain().get(0);
+        Summary result = bs.summarize().getStream().drain().get(0);
 
         final long totalMs = sw.elapsed(TimeUnit.MILLISECONDS) - loadMs;
         final long summarizeMs = result.getCreationTimeMs();

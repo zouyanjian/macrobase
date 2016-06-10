@@ -115,7 +115,7 @@ public class SoftGridCutoff {
         return grid.size();
     }
 
-    public double getDenseValue(double[] p) {
+    public double getUnscaledDenseValue(double[] p) {
         IntVec k = transformToKey(p);
         double weight = grid.getOrDefault(k, 0.0);
         if (weight > 0) {

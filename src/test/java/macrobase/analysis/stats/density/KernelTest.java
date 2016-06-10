@@ -4,6 +4,8 @@ import org.apache.commons.math3.distribution.MultivariateNormalDistribution;
 import org.apache.commons.math3.linear.DiagonalMatrix;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThan;
@@ -24,6 +26,16 @@ public class KernelTest {
         x[0] = 5;
         assertThat(g.density(x), lessThan(g.upperBound(x)));
         assertThat(g.density(x), greaterThan(g.lowerBound(x)));
+
+        System.out.println(
+                Arrays.toString(g.getBounds(new double[][]{{1.0},{3.0}}))
+        );
+        System.out.println(
+                Arrays.toString(g.getBounds(new double[][]{{1.0},{2.0}}))
+        );
+        System.out.println(
+                Arrays.toString(g.getBounds(new double[][]{{1.0},{1.0}}))
+        );
     }
 
     @Test

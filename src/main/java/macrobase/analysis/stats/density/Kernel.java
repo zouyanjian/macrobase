@@ -25,6 +25,10 @@ public abstract class Kernel {
     public abstract double getDimFactor(int curDim);
     public abstract double density(double[] d);
 
+    public double[] getBounds(double[][] deltas) {
+        return new double[]{density(deltas[0]), density(deltas[1])};
+    }
+
     public double lowerBound(double[] d) {
         return density(d);
     }

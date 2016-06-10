@@ -19,6 +19,8 @@ public class NTreeKDE {
 
     // ** Tree parameters
     private NKDTree tree;
+    // Whether the user provided a pre-populated tree
+    private boolean trainedTree = false;
     // Total density error tolerance
     private double tolerance = 0;
     // Cutoff point at which point we no longer need accuracy
@@ -43,6 +45,9 @@ public class NTreeKDE {
     public NTreeKDE setCutoff(double cutoff) {this.cutoff = cutoff; return this;}
     public NTreeKDE setBandwidth(double[] bw) {this.bandwidth = bw; return this;}
     public NTreeKDE setKernel(Kernel k) {this.kernel = k; return this;}
+    public NTreeKDE setTrainedTree(NKDTree tree) {this.tree=tree; this.trainedTree=true; return this;}
+
+    public NKDTree getTree() {return this.tree;}
 
     public double[] getBandwidth() {return bandwidth;}
 
@@ -63,14 +68,13 @@ public class NTreeKDE {
         kernel.initialize(bandwidth);
         this.selfPointDensity = kernel.density(new double[bandwidth.length]);
 
-        // Copy data since building the tree will sort the list
-        data = new ArrayList<>(data);
-
-        StopWatch sw = new StopWatch();
-        sw.start();
-        this.tree.build(data);
-        sw.stop();
-        log.debug("built kd-tree on {} points in {}", data.size(), sw.toString());
+        if (!trainedTree) {
+            StopWatch sw = new StopWatch();
+            sw.start();
+            this.tree.build(data);
+            sw.stop();
+            log.debug("built kd-tree on {} points in {}", data.size(), sw.toString());
+        }
     }
 
     /**
@@ -125,7 +129,6 @@ public class NTreeKDE {
 
             if (curEstimate.tree.isLeaf()) {
                 double exact = exactDensity(curEstimate.tree, d);
-//                System.out.println("Tree Exact: "+exact);
                 totalWMin += exact;
                 totalWMax += exact;
             } else {

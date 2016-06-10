@@ -1,6 +1,8 @@
 package macrobase.conf;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableMap;
 import io.dropwizard.Configuration;
 import macrobase.analysis.stats.*;
 import macrobase.analysis.stats.mixture.*;
@@ -17,6 +19,10 @@ import java.util.stream.Collectors;
 public class MacroBaseConf extends Configuration {
     private static final Logger log = LoggerFactory.getLogger(MacroBaseConf.class);
 
+    // Automatically populated fields
+    public TreeKDEConf kdeConf = new TreeKDEConf();
+
+    // Old style key fields
     public static final String QUERY_NAME = "macrobase.query.name";
     public static final String PIPELINE_NAME = "macrobase.pipeline.class";
 
@@ -155,7 +161,6 @@ public class MacroBaseConf extends Configuration {
         ZSCORE,
         KDE,
         BINNED_KDE,
-        TREE_KDE,
         MOVING_AVERAGE,
         ARIMA,
         BAYESIAN_NORMAL,
@@ -215,9 +220,6 @@ public class MacroBaseConf extends Configuration {
             case BINNED_KDE:
                 log.info("Using BinnedKDE transform.");
                 return new BinnedKDE(this);
-            case TREE_KDE:
-                log.info("Using TreeKDE transform.");
-                return new TreeKDE(this);
             case MOVING_AVERAGE:
                 log.info("Using Moving Average transform.");
                 return new MovingAverage(this);
@@ -449,10 +451,11 @@ public class MacroBaseConf extends Configuration {
 
     @Override
     public String toString() {
-        return _conf.entrySet().stream()
+        String s = _conf.entrySet().stream()
                 .sorted((a, b) -> a.getKey().compareTo(b.getKey()))
                 .map(e -> e.getKey() + ": " + e.getValue())
                 .collect(Collectors.joining("\n"));
+        return s;
     }
 
     private void sanityCheckBase() throws ConfigurationException {

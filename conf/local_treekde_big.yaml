@@ -23,9 +23,17 @@ macrobase.analysis.minOIRatio: 3.0
 macrobase.analysis.usePercentile: true
 macrobase.analysis.targetPercentile: 0.99
 
+kdeConf:
+  kernel: gaussian
+  tolMultiplier: .2
+  cutoffMultiplier: 2.0
+  bwMultiplier: 0.5
+  useGrid: true
+  gridSizes:
+    - 0.8
+    - 0.5
+  leafSize: 20
+  splitByWidth: true
+
 logging:
   level: DEBUG
-
-#  loggers:
-#    "macrobase": TRACE
-

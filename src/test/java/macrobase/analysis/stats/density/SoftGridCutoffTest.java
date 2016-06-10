@@ -20,11 +20,11 @@ public class SoftGridCutoffTest {
         for (int i=0; i<N;i++) {
             gc.add(p);
         }
-        assertEquals(N*k.density(bw), gc.getDenseValue(p), 1e-10);
+        assertEquals(N*k.density(bw), gc.getUnscaledDenseValue(p), 1e-10);
 
         double[] neighbor = {1.5, 0.5};
         double[] neighbordist = {1.0, 2.0};
-        assertEquals(N*k.density(neighbordist), gc.getDenseValue(neighbor), 1e-10);
+        assertEquals(N*k.density(neighbordist), gc.getUnscaledDenseValue(neighbor), 1e-10);
 
         gc.prune();
         // Should be no more grid cells after pruning
