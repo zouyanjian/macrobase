@@ -106,14 +106,14 @@ public class APrioriSummarizer extends BatchSummarizer {
                 2
         );
 
-        countSet(
-                encoded,
-                countCol,
-                outlierCol,
-                3
-        );
+        // countSet(
+        //         encoded,
+        //         countCol,
+        //         outlierCol,
+        //         3
+        // );
 
-        for (int o = 1; o <= 3; o++) {
+        for (int o = 1; o <= 2; o++) {
             log.info("Order {} Explanations: {}", o, setSaved.get(o).size());
         }
 
@@ -315,7 +315,7 @@ public class APrioriSummarizer extends BatchSummarizer {
     @Override
     public Explanation getResults() {
         List<AttributeSet> results = new ArrayList<>();
-        for (int o = 1; o <= 3; o++) {
+        for (int o = 1; o <= 2; o++) {
             HashSet<IntSet> curResults = setSaved.get(o);
             HashMap<IntSet, Integer> idxMapping = setIdxMapping.get(o);
             int[] oCounts = setOCounts.get(o);

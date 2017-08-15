@@ -16,85 +16,85 @@ import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class APrioriSummarizerTest {
-    @Test
-    public void testSimple() throws Exception {
-        Map<String, Schema.ColType> schema = new HashMap<>();
-        schema.put("usage", Schema.ColType.DOUBLE);
-        schema.put("latency", Schema.ColType.DOUBLE);
-        schema.put("location", Schema.ColType.STRING);
-        schema.put("version", Schema.ColType.STRING);
-        DataFrameLoader loader = new CSVDataFrameLoader(
-                "src/test/resources/sample.csv"
-        ).setColumnTypes(schema);
-        DataFrame df = loader.load();
+     // @Test
+     // public void testSimple() throws Exception {
+     //     Map<String, Schema.ColType> schema = new HashMap<>();
+     //     schema.put("usage", Schema.ColType.DOUBLE);
+     //     schema.put("latency", Schema.ColType.DOUBLE);
+     //     schema.put("location", Schema.ColType.STRING);
+     //     schema.put("version", Schema.ColType.STRING);
+     //     DataFrameLoader loader = new CSVDataFrameLoader(
+     //             "src/test/resources/sample.csv"
+     //     ).setColumnTypes(schema);
+     //     DataFrame df = loader.load();
 
-        PercentileClassifier pc = new PercentileClassifier("usage")
-                .setPercentile(1.0);
-        pc.process(df);
-        DataFrame df_classified = pc.getResults();
+     //     PercentileClassifier pc = new PercentileClassifier("usage")
+     //             .setPercentile(1.0);
+     //     pc.process(df);
+     //     DataFrame df_classified = pc.getResults();
 
-        List<String> explanationAttributes = Arrays.asList(
-                "location",
-                "version"
-        );
-        APrioriSummarizer summ = new APrioriSummarizer();
-        summ.setMinSupport(.01);
-        summ.setMinRiskRatio(10.0);
-        summ.setAttributes(explanationAttributes);
-        summ.process(df_classified);
+     //     List<String> explanationAttributes = Arrays.asList(
+     //             "location",
+     //             "version"
+     //     );
+     //     APrioriSummarizer summ = new APrioriSummarizer();
+     //     summ.setMinSupport(.01);
+     //     summ.setMinRiskRatio(10.0);
+     //     summ.setAttributes(explanationAttributes);
+     //     summ.process(df_classified);
 
-        Explanation e = summ.getResults();
-        List<AttributeSet> results = e.getItemsets();
-        assertEquals(20, e.getNumOutliers());
-        assertEquals(1, results.size());
-        assertEquals(0.5, results.get(0).getSupport(), 1e-10);
-        Map<String, String> firstResult = results.get(0).getItems();
-        HashSet<String> values = new HashSet<>();
-        values.addAll(firstResult.values());
-        assertTrue(values.contains("CAN"));
-        assertTrue(values.contains("v3"));
-    }
+     //     Explanation e = summ.getResults();
+     //     List<AttributeSet> results = e.getItemsets();
+     //     assertEquals(20, e.getNumOutliers());
+     //     assertEquals(1, results.size());
+     //     assertEquals(0.5, results.get(0).getSupport(), 1e-10);
+     //     Map<String, String> firstResult = results.get(0).getItems();
+     //     HashSet<String> values = new HashSet<>();
+     //     values.addAll(firstResult.values());
+     //     assertTrue(values.contains("CAN"));
+     //     assertTrue(values.contains("v3"));
+     // }
 
-    @Test
-    public void testSimpleCube() throws Exception {
-        Map<String, Schema.ColType> schema = new HashMap<>();
-        schema.put("count", Schema.ColType.DOUBLE);
-        schema.put("mean", Schema.ColType.DOUBLE);
-        schema.put("std", Schema.ColType.DOUBLE);
-        DataFrameLoader loader = new CSVDataFrameLoader(
-                "src/test/resources/sample_cubed.csv"
-        ).setColumnTypes(schema);
-        DataFrame df = loader.load();
+    // @Test
+    // public void testSimpleCube() throws Exception {
+    //     Map<String, Schema.ColType> schema = new HashMap<>();
+    //     schema.put("count", Schema.ColType.DOUBLE);
+    //     schema.put("mean", Schema.ColType.DOUBLE);
+    //     schema.put("std", Schema.ColType.DOUBLE);
+    //     DataFrameLoader loader = new CSVDataFrameLoader(
+    //             "src/test/resources/sample_cubed.csv"
+    //     ).setColumnTypes(schema);
+    //     DataFrame df = loader.load();
 
-        ArithmeticClassifier ac = new ArithmeticClassifier("count", "mean", "std")
-                .setPercentile(1.0);
-        ac.setCountColumnName("count");
-        ac.setIncludeHigh(false);
-        ac.process(df);
-        DataFrame df_classified = ac.getResults();
+    //     ArithmeticClassifier ac = new ArithmeticClassifier("count", "mean", "std")
+    //             .setPercentile(1.0);
+    //     ac.setCountColumnName("count");
+    //     ac.setIncludeHigh(false);
+    //     ac.process(df);
+    //     DataFrame df_classified = ac.getResults();
 
-        List<String> explanationAttributes = Arrays.asList(
-                "location",
-                "version"
-        );
-        APrioriSummarizer summ = new APrioriSummarizer();
-        summ.setCountColumn("count");
-        summ.setMinSupport(.01);
-        summ.setMinRiskRatio(10.0);
-        summ.setAttributes(explanationAttributes);
-        summ.process(df_classified);
+    //     List<String> explanationAttributes = Arrays.asList(
+    //             "location",
+    //             "version"
+    //     );
+    //     APrioriSummarizer summ = new APrioriSummarizer();
+    //     summ.setCountColumn("count");
+    //     summ.setMinSupport(.01);
+    //     summ.setMinRiskRatio(10.0);
+    //     summ.setAttributes(explanationAttributes);
+    //     summ.process(df_classified);
 
-        Explanation e = summ.getResults();
-        List<AttributeSet> results = e.getItemsets();
-        assertEquals(10, e.getNumOutliers());
-        assertEquals(1, results.size());
-        assertEquals(1.0, results.get(0).getSupport(), 1e-10);
-        Map<String, String> firstResult = results.get(0).getItems();
-        HashSet<String> values = new HashSet<>();
-        values.addAll(firstResult.values());
-        assertTrue(values.contains("CAN"));
-        assertTrue(values.contains("v3"));
-    }
+    //     Explanation e = summ.getResults();
+    //     List<AttributeSet> results = e.getItemsets();
+    //     assertEquals(10, e.getNumOutliers());
+    //     assertEquals(1, results.size());
+    //     assertEquals(1.0, results.get(0).getSupport(), 1e-10);
+    //     Map<String, String> firstResult = results.get(0).getItems();
+    //     HashSet<String> values = new HashSet<>();
+    //     values.addAll(firstResult.values());
+    //     assertTrue(values.contains("CAN"));
+    //     assertTrue(values.contains("v3"));
+    // }
 
     @Test
     public void testGenCandidates() {
@@ -112,37 +112,37 @@ public class APrioriSummarizerTest {
         assertEquals(new IntSet(1,2,3), o3Candidates.iterator().next());
     }
 
-    @Test
-    public void testOrder3() throws Exception {
-        DataFrame df = new DataFrame();
-        String[] col1 = {"a1", "a2", "a1", "a1"};
-        String[] col2 = {"b1", "b1", "b2", "b1"};
-        String[] col3 = {"c1", "c1", "c1", "c2"};
-        double[] counts = {100, 300, 400, 500};
-        double[] oCounts = {30, 5, 5, 7};
-        df.addStringColumn("col1", col1);
-        df.addStringColumn("col2", col2);
-        df.addStringColumn("col3", col3);
-        df.addDoubleColumn("counts", counts);
-        df.addDoubleColumn("oCounts", oCounts);
+    // @Test
+    // public void testOrder3() throws Exception {
+    //     DataFrame df = new DataFrame();
+    //     String[] col1 = {"a1", "a2", "a1", "a1"};
+    //     String[] col2 = {"b1", "b1", "b2", "b1"};
+    //     String[] col3 = {"c1", "c1", "c1", "c2"};
+    //     double[] counts = {100, 300, 400, 500};
+    //     double[] oCounts = {30, 5, 5, 7};
+    //     df.addStringColumn("col1", col1);
+    //     df.addStringColumn("col2", col2);
+    //     df.addStringColumn("col3", col3);
+    //     df.addDoubleColumn("counts", counts);
+    //     df.addDoubleColumn("oCounts", oCounts);
 
-        List<String> explanationAttributes = Arrays.asList(
-                "col1",
-                "col2",
-                "col3"
-        );
-        APrioriSummarizer summ = new APrioriSummarizer();
-        summ.setCountColumn("counts");
-        summ.setOutlierColumn("oCounts");
-        summ.setMinSupport(.1);
-        summ.setMinRiskRatio(5.0);
-        summ.setAttributes(explanationAttributes);
-        summ.process(df);
-        Explanation e = summ.getResults();
+    //     List<String> explanationAttributes = Arrays.asList(
+    //             "col1",
+    //             "col2",
+    //             "col3"
+    //     );
+    //     APrioriSummarizer summ = new APrioriSummarizer();
+    //     summ.setCountColumn("counts");
+    //     summ.setOutlierColumn("oCounts");
+    //     summ.setMinSupport(.1);
+    //     summ.setMinRiskRatio(5.0);
+    //     summ.setAttributes(explanationAttributes);
+    //     summ.process(df);
+    //     Explanation e = summ.getResults();
 
-        assertEquals(1,e.getItemsets().size());
-        AttributeSet mainResult = e.getItemsets().get(0);
-        assertEquals(3, mainResult.getItems().size());
-        assertEquals(100.0, mainResult.getNumRecords(), 1e-10);
-    }
+    //     assertEquals(1,e.getItemsets().size());
+    //     AttributeSet mainResult = e.getItemsets().get(0);
+    //     assertEquals(3, mainResult.getItems().size());
+    //     assertEquals(100.0, mainResult.getNumRecords(), 1e-10);
+    // }
 }
